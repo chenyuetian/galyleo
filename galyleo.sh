@@ -105,6 +105,7 @@ fi
 #   -d | --notebook-dir <jupyter_notebook_dir>
 #      | --scratch-dir <local_scratch_dir>
 #   -e | --env-modules <env_modules>
+#      | --modulepathadd <modulepathadd>
 #   -s | --sif <singularity_image_file>
 #   -B | --bind <singularity_bind_mounts>
 #      | --nv
@@ -153,6 +154,10 @@ function galyleo_launch() {
 
   # Declare input variables associated with environment modules.
   local env_modules=''
+
+   # Declare input variables associated with customized module paths.
+  local modulepathadd=''
+
 
   # Declare input variables associated with Singularity containers.
   local singularity_image_file=''
@@ -256,6 +261,10 @@ function galyleo_launch() {
         env_modules="${2}"
         shift 2
         ;;
+      --modulepathadd )
+        modulepathadd="${2}"
+        shift 2
+        ;;
       -s | --sif )
         singularity_image_file="${2}"
         shift 2
@@ -337,6 +346,7 @@ function galyleo_launch() {
   slog output -m "    -d | --notebook-dir      : ${jupyter_notebook_dir}"
   slog output -m "       | --scratch-dir       : ${local_scratch_dir}"
   slog output -m "    -e | --env-modules       : ${env_modules}"
+  slog output -m "       | --modulepathadd     : ${modulepathadd}"
   slog output -m "    -s | --sif               : ${singularity_image_file}"
   slog output -m "    -B | --bind              : ${singularity_bind_mounts}"
   slog output -m "       | --nv                : ${singularity_gpu_type}"
@@ -414,6 +424,22 @@ function galyleo_launch() {
         fi
       done
     fi
+    
+     # Check if the module paths specified by the user, if any, exist.
+    # If not, then halt the launch
+    if [[ -n "${modulepathadd}" ]]; then
+      IFS=','
+      read -r -a modulepaths <<< "${modulepathadd}"
+      IFS=$' \t\n'
+      for modulepath in "${modulepaths[@]}"; do
+        ls "${modulepath}"
+        if [[ $? -ne 0 ]]; then
+          slog error -m "No such file or directory: ${modulepath}"
+          return 1
+        fi
+      done
+    fi
+
 
     # Check if the conda environment specified by the user, if any, can be
     # initialized and activated successfully. If not, then halt the launch.
@@ -573,6 +599,16 @@ function galyleo_launch() {
       unset IFS
       for module in "${modules[@]}"; do
         slog append -f "${job_name}.sh" -m  "module load ${module}"
+      done
+    fi
+
+     # Add module path specified by the user.
+    if [[ -n "${modulepathadd}" ]]; then
+      IFS=','
+      read -r -a modulepaths <<< "${modulepathadd}"
+      unset IFS
+      for modulepath in "${modulepaths[@]}"; do
+        slog append -f "${job_name}.sh" -m  "export MODULEPATH=${modulepath}:${MODULEPATH}"
       done
     fi
 
@@ -995,6 +1031,7 @@ function galyleo_help() {
   slog output -m "    -d | --notebook-dir      : ${jupyter_notebook_dir}"
   slog output -m "       | --scratch-dir       : ${local_scratch_dir}"
   slog output -m "    -e | --env-modules       : ${env_modules}"
+  slog output -m "       | --modulepathadd     : ${modulepathadd}"
   slog output -m "    -s | --sif               : ${singularity_image_file}"
   slog output -m "    -B | --bind              : ${singularity_bind_mounts}"
   slog output -m "       | --nv                : ${singularity_gpu_type}"
