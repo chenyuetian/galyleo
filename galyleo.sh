@@ -608,8 +608,10 @@ function galyleo_launch() {
       read -r -a modulepaths <<< "${modulepathadd}"
       unset IFS
       for modulepath in "${modulepaths[@]}"; do
-        slog append -f "${job_name}.sh" -m  "export MODULEPATH=${modulepath}:${MODULEPATH}"
+      joinedpath="$joinedpath$delim$modulepath"
+      delim=":"
       done
+       slog append -f "${job_name}.sh" -m  "export MODULEPATH=${joinedpath}:${MODULEPATH}"
     fi
 
     # Activate a pre-installed conda environment specified by the user.
