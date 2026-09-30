@@ -1,0 +1,80 @@
+---
+sidebar_position: 2
+---
+
+# Conda Environments
+
+[Conda](https://docs.conda.io) is an open-source software package and
+environment manager developed by [Anaconda Inc](https://www.anaconda.com).
+Its ease of use, compatibility across multiple operating systems, and
+comprehensive support for both the Python and R software ecosystems has
+made it one of the most popular ways to build and maintain custom
+software environments in the data science and machine learning
+communities. And because of the constantly evolving software landscape
+in these spaces, which can involve quite complex software dependencies,
+conda is often the simplest way to get your custom Python or R software
+environment up and running on an HPC system.
+
+galyleo supports the use of conda to configure the software environment 
+for your Jupyter notebook sessions. In general, we recommend the use of 
+[`environment.yml`](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file) 
+files to build your conda environments. galyleo will use these files to
+dynamically generate and serve your conda environments when your session
+starts.
+
+For example, let's consider the following `environment.yml` file.
+
+```yaml
+name: notebooks-sharing
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python
+  - jupyterlab
+  - pandas
+  - matplotlib
+  - seaborn
+  - scikit-learn
+```
+
+If you wanted to start a 30-minute Jupyter notebook session with access
+to four CPU cores and eight GB of memory on one of Expanse's AMD compute
+nodes in the `debug` partition using the `notebooks-sharing` conda 
+environment, then you would use the following `launch` command with the 
+`--conda-yml` command-line option followed by the path to the 
+`environment.yml` file.
+
+```bash
+galyleo launch --account abc123 --partition debug --cpus 4 --memory 8 --time-limit 00:30:00 --conda-yml environment.yml --quiet
+```
+
+You can improve the startup performance for subsequent notebook sessions
+by appending the `--cache` flag to your `launch` command, which saves
+the environment in your `$HOME` directory with 
+[conda-pack](https://conda.github.io/conda-pack) for future reuse.
+
+```bash
+galyleo launch --account abc123 --partition debug --cpus 4 --memory 8 --time-limit 00:30:00 --conda-yml environment.yml --cache --quiet
+```
+
+If you've already installed a conda distribution within your `$HOME`
+directory and configured a conda environment, then you can simply
+activate the environment for your Jupyter notebook session with the
+`--conda-env` option followed by the name of the environment.
+
+```bash
+galyleo launch --account abc123 --partition debug --cpus 4 --memory 8 --time-limit 00:30:00 --conda-env notebooks-sharing --quiet
+```
+
+Note, however, the `--conda-env` option assumes that your shell
+configuration script (e.g. `~/.bashrc`) has already been configured
+properly by the `conda init` command for shell interaction. If it is not
+configured, you can still activate a conda environment by providing the
+path to the `conda.sh` initialization script located in the `etc/profile.d`
+directory of your distribution via the `--conda-init` option.
+
+```bash
+galyleo launch --account abc123 --partition debug --cpus 4 --memory 8 --time-limit 00:30:00 --conda-env notebooks-sharing --conda-init ~/miniforge3/etc/profile.d/conda.sh --quiet
+```

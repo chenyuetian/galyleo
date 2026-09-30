@@ -1,0 +1,8 @@
+{
+  "label": "Software Environments",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "After you specify the compute resources required for your Jupyter notebook session using the Scheduler Options, the next most important set of command-line options for the launch command are those that help you define the software environment."
+  }
+}

@@ -1,0 +1,66 @@
+---
+sidebar_position: 1
+---
+
+# Scheduler Options
+
+Every galyleo session runs as a batch job submitted to Slurm. As such, 
+you must specify the following key command-line options to request the
+compute resources required for the job.
+
+- `-A, --account`: charge the compute resources required by this job to
+  the specified account (e.g., `abc123`)
+- `-p, --partition`: select the resource partition (or queue) for the
+  job (e.g. , `debug`)
+- `-c, --cpus`: number of cpus to request for the job
+- `-m, --memory`: amount of memory (in GB) required for the job
+- `-g, --gpus`: number of GPUs required for the job
+- `-t, --time-limit`: set a maximum runtime (in HH:MM:SS) for the job
+
+:::info[]
+You can check your available `account` numbers on Expanse with the 
+`expanse-client` tool.
+
+```bash
+[mkandes@login01 ~]$ expanse-client user -p
+
+ Resource  expanse 
+
+ NAME     STATE  PROJECT  TG PROJECT       USED  AVAILABLE  USED BY PROJECT 
+----------------------------------------------------------------------------
+ mkandes  allow  csd403   TG-IBN140002        0   24000000         18237896 
+ mkandes  allow  sdp157   TG-TRA260010        6       1000            15598 
+ mkandes  allow  sdp173   TG-CIS261077      276      89546            42136 
+ mkandes  allow  sds173   TG-CCR190013        0      50000             1027 
+ mkandes  allow  sds184   TG-TRA210003        0       5000              893 
+ mkandes  allow  sds196   TG-TRA230015        0      50000              475 
+ mkandes  allow  use300                 2729548    5050000          4755682 
+[mkandes@login01 ~]$
+```
+
+On TSCC, use the `tssc_client` tool.
+
+```bash
+[mkandes@login1 ~]$ tscc_client
+======================================================================================================
+ TSCC Cluster Utilization from 2026-09-28 until 2026-09-29T19:00:00
+======================================================================================================
+        bank account: use300
+         description: tscc-admin
+        organization: sdsc
+          allocation: 1000000 SUs
+            end date: 26-SEP-27
+           avail QOS: condo,condo-gpu,hca-sim100,hcp-sbp101,hotel,hotel-gpu,normal,unlim
+                NOTE: avail QOS for user may differ from account
+------------------------------------------------------------------------------------------------------
+             Account                                                       Account               
+             or User          Usage          Allow      Usage/Allow     Proportion        Balance
+---------------------   ------------   ------------   --------------   ------------   ------------
+              use300:          67364        1000000          6.736 %      100.000 %         932636
+---------------------   ------------   ------------   --------------   ------------   ------------
+             mkandes:              0        1000000          0.000 %        0.000 %         932636
+------------------------------------------------------------------------------------------------------
+
+[mkandes@login1 ~]$
+```
+:::

@@ -1,0 +1,50 @@
+---
+sidebar_position: 3
+---
+
+# Singularity Containers
+
+[Singularity](https://sylabs.io/guides/latest/user-guide) and
+[Apptainer](https://apptainer.org/docs/user/latest) bring operating
+system-level virtualization to scientific and high-performance computing,
+allowing you to package complete software environments --- including 
+operating systems, software applications, libraries, and data --- in a
+simple, portable, and reproducible way, which can then be run almost
+anywhere.
+
+If you have a container that you would like use to run your Jupyter
+notebook session, you can use the `--sif` option in your `launch` 
+command followed by either:
+- a URI to where the container is stored in a registry (e.g., [Docker Hub](https://hub.docker.com)), or
+- a path to where the container image is stored on a local filesystem. 
+
+In general, we recommend the use of containers served from 
+[common registries](https://docs.sylabs.io/guides/latest/user-guide/singularity_and_docker.html#containers-from-other-registries),
+which will be cached to your local filesystem for reuse by default.
+
+For example, let's say you need an [R](https://www.r-project.org/)
+environment for your Jupyter notebook session. Try the latest 
+[r-notebook](https://quay.io/repository/jupyter/r-notebook) container
+from the [Jupyter Docker Stacks](https://jupyter-docker-stacks.readthedocs.io)
+project on [Quay.io](https://quay.io).
+
+```bash
+galyleo launch --account abc123 --partition debug --cpus 4 --memory 8 --time-limit 00:30:00 --sif docker://quay.io/jupyter/r-notebook:latest --quiet
+```
+
+Or, if you want to work on your latest AI project, then go ahead and 
+launch a GPU-accelerated [PyTorch](https://pytorch.org) container from
+the [NGC Catalog](https://catalog.ngc.nvidia.com) on an NVIDIA V100 GPU 
+available in Expanse's `gpu-debug` partition.
+
+```bash
+galyleo launch --account abc123 --partition gpu-debug --cpus 10 --memory 92 --gpus 1 --time-limit 00:30:00 --sif docker://nvcr.io/nvidia/pytorch:24.12-py3 --bind /expanse,/scratch --nv --quiet
+```
+
+Here, the user-defined [`--bind`](https://docs.sylabs.io/guides/latest/user-guide/bind_paths_and_mounts.html)
+mount option enables access to the `/expanse` filesystems (e.g., `/expanse/lustre`)
+and the node-local NVMe `/scratch` disk available on each compute node
+from within the container. By default, only your `$HOME` directory is
+accessible from within the container.
+
+The `--nv` flag enables [NVIDIA GPU support](https://docs.sylabs.io/guides/latest/user-guide/gpu.html). 

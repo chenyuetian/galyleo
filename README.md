@@ -285,9 +285,9 @@ directory created in your `$HOME` directory.
 
 ### Expanse User Portal
 
-`galyleo` is integrated with the [Expanse User Portal](https://portal.expanse.sdsc.edu).
-After logging into the portal with your [ACCESS-CI](https://access-ci.org)
-credentials, you can access this web-based frontend interface to `galyleo`
+`galyleo` is integrated with the [Expanse](https://portal.expanse.sdsc.edu) 
+and [TSCC](http://portal-tscc.sdsc.edu) User Portals. After logging into 
+either portal, you can access this web-based frontend interface to `galyleo`
 from the pinned *Jupyter* app shown on the main dashboard. You can also
 find it located under the the *Interactive Apps* tab in the toolbar 
 across the top of your browser window, where you can select the *Jupyter*
@@ -312,8 +312,8 @@ University of California, San Diego
 
 ## Version
 
-0.9.0
+0.9.1
 
 ## Last Updated
 
-Sunday, August 9th, 2026
+Wedneday, September 30th, 2026

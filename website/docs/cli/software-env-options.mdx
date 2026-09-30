@@ -1,0 +1,38 @@
+---
+sidebar_position: 3
+---
+
+# Software Environment Options
+
+galyleo enables you to launch Jupyter notebook sessions within any
+software environment. To specify these software environments, it 
+currently supports the use of environment modules, conda environments, 
+and Singularity (or Docker) containers.  The only requirement is Jupyter
+must be available within the software environment when the job starts. 
+Otherwise, no Jupyter session can be created.
+
+- `-e, --env-modules`: comma-separated list of environment modules to
+  load
+- `--conda-yml`: path to a conda `environment.yml` file
+- `--cache`: caches your conda environment; reused if the
+  `environment.yml` file does not change between sessions
+- `-s, --sif`: URI to a Singularity (or Docker) container stored in a
+  registry, or path to a Singularity container image file
+- `-B, --bind`: comma-separated list of user-defined bind paths to be
+  mounted within a Singularity container
+- `--nv`: enable NVIDIA GPU support when running a Singularity container
+
+:::tip[]
+`--conda-yml` environments provide the most flexible option for most
+users. It dynamically builds your conda environment at runtime from the
+`environment.yml` file. You can even perform additional `conda install`
+commands during the live session to modify the environment as needed. 
+:::
+
+:::warning[]
+Do not mix environment module, conda environment, and/or container
+options together in any one `launch` command. In general, you should
+choose only one way to specify the software environment for your Jupyter
+notebook session. However, there are exceptions.
+:::
+

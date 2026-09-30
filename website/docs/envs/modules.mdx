@@ -1,0 +1,24 @@
+---
+sidebar_position: 1
+---
+
+# Environment Modules
+
+Most HPC systems use a software module system like [Lmod](https://lmod.readthedocs.io)
+or [Environment Modules](http://modules.sourceforge.net) to provide you
+with a convenient way to load pre-installed software applications, 
+libraries, and other packages into your environment.
+
+If you need to `module load` any software modules into the environment
+for your Jupyter notebook session, you can include them as a 
+comma-separated list with the `--env-modules` option as part of your 
+`launch` command. 
+
+For example, the following `launch` command requests a 30-minute 
+JupyterLab session with two CPU cores and four GB of memory on one of 
+Expanse's AMD compute nodes in the `debug` partition using the version
+of JupyterLab available in its `cpu/0.17.3b` software module environment.
+
+```bash
+galyleo launch --account abc123 --partition debug --cpus 2 --memory 4 --time-limit 00:30:00 --env-modules cpu/0.17.3b,gcc/10.2.0,py-jupyterlab/3.2.1 --quiet
+```

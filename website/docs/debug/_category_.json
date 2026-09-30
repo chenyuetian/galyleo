@@ -1,0 +1,8 @@
+{
+  "label": "Common Problems",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "How to debug common problems with your galyleo sessions."
+  }
+}
